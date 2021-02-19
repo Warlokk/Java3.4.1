@@ -2,67 +2,64 @@ package ru.netology.manager;
 
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ru.netology.domain.MovieItem;
+import ru.netology.repository.AfishaRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class AfishaManagerTest {
-    private AfishaManager manager = new AfishaManager();
+    @Mock
+    private AfishaRepository repository;
+
+    @InjectMocks
+    private AfishaManager manager;
     MovieItem first = new MovieItem(1, "Постер", "Бладшот", "Боевик");
     MovieItem second = new MovieItem(2, "Постер", "Вперёд", "Мультфильм");
     MovieItem third = new MovieItem(3, "Постер", "Отель Белград", "Комедия");
     MovieItem fourth = new MovieItem(4, "Постер", "Джентльмены", "Боевик");
     MovieItem fifth = new MovieItem(5, "Постер", "Человек-невидимка", "Ужасы");
 
-    @Test
-    void shouldGetEmpty() {
-        MovieItem[] expected = new MovieItem[0];
-        MovieItem[] actual = manager.getAll();
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldAddToEmpty() {
-        manager.add(first);
-        MovieItem[] expected = new MovieItem[]{first};
-        MovieItem[] actual = manager.getAll();
-        assertArrayEquals(expected, actual);
-    }
-
-    @Test
-    void shouldAddToExisted() {
-        manager.add(first);
-        MovieItem[] expected = new MovieItem[]{first};
-        MovieItem[] actual = manager.getAll();
-        assertArrayEquals(expected, actual);
-        manager.add(second);
-        MovieItem[] expectedAdded = new MovieItem[]{second,first};
-        MovieItem[] actualAdded = manager.getAll();
-        assertArrayEquals(expectedAdded, actualAdded);
-    }
-
-    @Test
-    void shouldGetMoviesForFeed() {
+    public void setUp() {
         manager.add(first);
         manager.add(second);
         manager.add(third);
         manager.add(fourth);
         manager.add(fifth);
-        MovieItem[] expected = new MovieItem[]{fifth, fourth,third,second,first};
+    }
+
+
+    @Test
+    void shouldGetMoviesForFeed() {
+        setUp();
+        MovieItem[] returned = new MovieItem[]{first, second, third, fourth, fifth};
+        doReturn(returned).when(repository).findAll();
+
+        MovieItem[] expected = new MovieItem[]{fifth, fourth, third, second, first};
         MovieItem[] actual = manager.getMoviesForFeed();
         assertArrayEquals(expected, actual);
+
+        verify(repository).findAll();
     }
 
     @Test
     void shouldGetMoviesForFlexFeed() {
-        AfishaManager managerFlex = new AfishaManager(3);
-        managerFlex.add(first);
-        managerFlex.add(second);
-        managerFlex.add(third);
-        managerFlex.add(fourth);
-        managerFlex.add(fifth);
-        MovieItem[] expected = new MovieItem[]{fifth, fourth,third};
-        MovieItem[] actual = managerFlex.getMoviesForFeed();
+        setUp();
+        manager.setFeedCount(3);
+        MovieItem[] returned = new MovieItem[]{first, second, third, fourth, fifth};
+        doReturn(returned).when(repository).findAll();
+
+        MovieItem[] expected = new MovieItem[]{fifth, fourth, third};
+        MovieItem[] actual = manager.getMoviesForFeed();
         assertArrayEquals(expected, actual);
+
+        verify(repository).findAll();
     }
+
+
 }
