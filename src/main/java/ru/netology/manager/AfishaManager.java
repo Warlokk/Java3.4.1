@@ -13,7 +13,7 @@ public class AfishaManager {
     private int feedCount = 10;
 
     public AfishaManager(int feedCount) {
-            this.feedCount = feedCount;
+        this.feedCount = feedCount;
     }
 
     public void add(MovieItem item) {
@@ -26,9 +26,10 @@ public class AfishaManager {
     }
 
     public MovieItem[] getMoviesForFeed() {
-        if (this.feedCount > items.length)
-                 feedCount = items.length;
-        MovieItem[] result = new MovieItem[feedCount];
+        int feed = this.feedCount;
+        if (feed > items.length)
+            feed = items.length;
+        MovieItem[] result = new MovieItem[feed];
         for (int i = 0; i < result.length; i++) {
             int index = items.length - i - 1;
             result[i] = items[index];

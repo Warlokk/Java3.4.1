@@ -14,6 +14,14 @@ class AfishaManagerTest {
     MovieItem fourth = new MovieItem(4, "Постер", "Джентльмены", "Боевик");
     MovieItem fifth = new MovieItem(5, "Постер", "Человек-невидимка", "Ужасы");
 
+    public void setUp() {
+        manager.add(first);
+        manager.add(second);
+        manager.add(third);
+        manager.add(fourth);
+        manager.add(fifth);
+    }
+
     @Test
     void shouldGetEmpty() {
         MovieItem[] expected = new MovieItem[0];
@@ -36,33 +44,25 @@ class AfishaManagerTest {
         MovieItem[] actual = manager.getAll();
         assertArrayEquals(expected, actual);
         manager.add(second);
-        MovieItem[] expectedAdded = new MovieItem[]{second,first};
+        MovieItem[] expectedAdded = new MovieItem[]{second, first};
         MovieItem[] actualAdded = manager.getAll();
         assertArrayEquals(expectedAdded, actualAdded);
     }
 
     @Test
     void shouldGetMoviesForFeed() {
-        manager.add(first);
-        manager.add(second);
-        manager.add(third);
-        manager.add(fourth);
-        manager.add(fifth);
-        MovieItem[] expected = new MovieItem[]{fifth, fourth,third,second,first};
+        setUp();
+        MovieItem[] expected = new MovieItem[]{fifth, fourth, third, second, first};
         MovieItem[] actual = manager.getMoviesForFeed();
         assertArrayEquals(expected, actual);
     }
 
     @Test
     void shouldGetMoviesForFlexFeed() {
-        AfishaManager managerFlex = new AfishaManager(3);
-        managerFlex.add(first);
-        managerFlex.add(second);
-        managerFlex.add(third);
-        managerFlex.add(fourth);
-        managerFlex.add(fifth);
-        MovieItem[] expected = new MovieItem[]{fifth, fourth,third};
-        MovieItem[] actual = managerFlex.getMoviesForFeed();
+        manager = new AfishaManager(3);
+        setUp();
+        MovieItem[] expected = new MovieItem[]{fifth, fourth, third};
+        MovieItem[] actual = manager.getMoviesForFeed();
         assertArrayEquals(expected, actual);
     }
 }
