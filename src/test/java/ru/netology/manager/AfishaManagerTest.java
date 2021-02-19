@@ -49,8 +49,8 @@ class AfishaManagerTest {
 
     @Test
     void shouldGetMoviesForFlexFeed() {
+        manager = new AfishaManager(3,repository);
         setUp();
-        manager.setFeedCount(3);
         MovieItem[] returned = new MovieItem[]{first, second, third, fourth, fifth};
         doReturn(returned).when(repository).findAll();
 

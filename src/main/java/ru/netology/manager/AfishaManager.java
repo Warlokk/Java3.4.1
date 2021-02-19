@@ -10,15 +10,12 @@ import ru.netology.repository.AfishaRepository;
 @NoArgsConstructor
 @Data
 public class AfishaManager {
-    private AfishaRepository repository;
     private int feedCount = 10;
+    private AfishaRepository repository;
+
 
     public AfishaManager(AfishaRepository repository) {
         this.repository = repository;
-    }
-
-    public AfishaManager(int feedCount) {
-        this.feedCount = feedCount;
     }
 
     public void add(MovieItem item) {
@@ -27,9 +24,10 @@ public class AfishaManager {
 
     public MovieItem[] getMoviesForFeed() {
         MovieItem[] items = repository.findAll();
-        if (this.feedCount > items.length)
-            feedCount = items.length;
-        MovieItem[] result = new MovieItem[feedCount];
+        int feed = this.feedCount;
+        if (feed > items.length)
+            feed = items.length;
+        MovieItem[] result = new MovieItem[feed];
         for (int i = 0; i < result.length; i++) {
             int index = items.length - i - 1;
             result[i] = items[index];
